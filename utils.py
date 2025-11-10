@@ -1,10 +1,13 @@
 import pandas as pd
 
-def loadData():
-    map = pd.read_excel("E:\Apriori\data.xlsx")
-    return map.to_dict()
+frequentItemsetsList = []
+supportList = []
 
-# Map Of Itemset : Support
+def loadData():
+    return pd.read_excel("E:\Apriori\data.xlsx").to_dict()
+
+# Takes Raw Data
+# Returns List Of All Unique Itemsets In The Data
 def initialList(data):
     dataList = []
     for i in data:
@@ -38,14 +41,14 @@ def calculateSupport(joinedList, data):
 
 # Takes Dict Of Item : Support And Prun
 # Return Map Of Frequent Itemsets
-def cadidatePrunning(dataMap, minSupport, fqit, sup):
+def cadidatePrunning(dataMap, minSupport):
     nonFreqItemsets = []
     for item in dataMap:
         if dataMap[item] < minSupport:
             nonFreqItemsets.append(item)
         else:
-            fqit.append(item)
-            sup.append(dataMap[item])
+            frequentItemsetsList.append(item)
+            supportList.append(dataMap[item])
     for item in nonFreqItemsets:
         dataMap.pop(item)
     return dataMap
@@ -71,5 +74,5 @@ def joinItemset(dataMap):
             for j in range(i + 1, len(keys)):
                 sub2 = keys[j][0 : curLen - 1]
                 if sub1 == sub2:
-                    joined.append(keys[i] + keys[j][len(keys[j]) - 1])
+                    joined.append(keys[i] + keys[j][-1])
     return joined
